@@ -4,15 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ops Dashboard</title>
-<!-- Same page as dashboard-before.html after the zeromark-style skill. IDs, handlers and data are unchanged;
-     the old colour/shadow rules were removed, layout rules kept, zm-* classes added. -->
+<!-- dashboard-before.html after the zeromark-style skill, expressive level (the default).
+     The original controls, IDs, handlers, charts and table are all still here (#range, #q, #refresh,
+     #traffic, #budget, #services). The signature layer is built from the page's own numbers: the masthead
+     confetti settles into the traffic data and the headline reads the KPIs. The service-health strip and
+     incident timeline show components to use when a dashboard has that data. Their data is illustrative. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../skills/zeromark-style/assets/zeromark.css">
 <style>
-  /* layout kept from the original; all colour, type and shadow now come from zeromark.css */
-  .row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-top: 16px; }
+  .row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .budget-wrap { position: relative; }
+  .budget-center { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; text-align: center; }
+  .budget-center .zm-figure { font-size: 44px; }
   @media (max-width: 800px) { .row { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -21,60 +26,136 @@
   <a class="zm-brand" href="#"><span class="zm-brand-mark" aria-hidden="true">O</span>Ops</a>
   <nav class="zm-nav"><a href="#" aria-current="page">Overview</a><a href="#">Services</a><a href="#">Incidents</a><a href="#">Settings</a></nav>
 </header>
-<main class="zm-page">
-  <div class="zm-spread" style="margin-bottom:20px">
-    <div>
-      <div class="zm-kicker">Production · all regions</div>
-      <h1 class="zm-h1" style="margin-top:8px">Ops Dashboard</h1>
-    </div>
-    <div class="zm-row">
-      <label for="range" class="zm-label">Range</label>
-      <select id="range" class="zm-select" style="width:auto"><option>Last 7 days</option><option>Last 30 days</option></select>
-      <input id="q" class="zm-input" style="width:200px" type="search" placeholder="Filter services">
-      <button id="refresh" class="zm-btn zm-btn--primary" type="submit">Refresh</button>
+
+<section class="zm-masthead zm-rings" aria-labelledby="title">
+  <canvas class="zm-field" id="field" aria-hidden="true"></canvas>
+  <div class="zm-masthead-inner">
+    <div class="zm-masthead-copy" id="headline">
+      <div class="zm-kicker">Production · all regions · last 7 days</div>
+      <h1 class="zm-statement" id="title"><span data-zm-count="48210">48,210</span> requests a minute. <em>3 incidents need eyes.</em></h1>
+      <p class="zm-lede">Traffic is up 6.1% on last week. Latency crept up 18&nbsp;ms, and most of it is inventory-sync.</p>
+      <div class="zm-row" style="margin-top:22px">
+        <label for="range" class="zm-label">Range</label>
+        <select id="range" class="zm-select" style="width:auto"><option>Last 7 days</option><option>Last 30 days</option></select>
+        <input id="q" class="zm-input" style="width:180px" type="search" placeholder="Filter services">
+        <button id="refresh" class="zm-btn zm-btn--primary" type="submit">Refresh →</button>
+      </div>
     </div>
   </div>
+</section>
 
-  <section class="zm-grid" style="--zm-min:200px">
-    <div class="zm-kpi zm-rise" style="--zm-i:0"><div class="zm-kpi-label">Requests / min</div><div class="zm-kpi-value">48,210</div><div class="zm-kpi-foot"><span class="zm-delta up">+6.1%</span> vs last week</div></div>
-    <div class="zm-kpi zm-rise" style="--zm-i:1"><div class="zm-kpi-label">p95 latency</div><div class="zm-kpi-value">212<small>ms</small></div><div class="zm-kpi-foot"><span class="zm-delta down">+18 ms</span> vs last week</div></div>
-    <div class="zm-kpi zm-rise" style="--zm-i:2"><div class="zm-kpi-label">Error rate</div><div class="zm-kpi-value">0.42<small>%</small></div><div class="zm-kpi-foot"><span class="zm-delta up">−0.08 pts</span> vs last week</div></div>
-    <div class="zm-kpi zm-rise" style="--zm-i:3"><div class="zm-kpi-label">Open incidents</div><div class="zm-kpi-value">3</div><div class="zm-kpi-foot"><span class="zm-pill zm-pill--bad">1 critical</span></div></div>
+<main class="zm-page" style="padding-top:28px">
+  <section class="zm-grid zm-reveal-group" style="--zm-min:200px" aria-label="Key metrics">
+    <div class="zm-kpi"><div class="zm-kpi-label">Requests / min</div><div class="zm-kpi-value"><span data-zm-count="48210">48,210</span></div><div class="zm-kpi-foot"><span class="zm-delta up">+6.1%</span> vs last week</div></div>
+    <div class="zm-kpi"><div class="zm-kpi-label">p95 latency</div><div class="zm-kpi-value"><span data-zm-count="212">212</span><small>ms</small></div><div class="zm-kpi-foot"><span class="zm-delta down">+18 ms</span> vs last week</div></div>
+    <div class="zm-kpi"><div class="zm-kpi-label">Error rate</div><div class="zm-kpi-value"><span data-zm-count="0.42" data-zm-decimals="2">0.42</span><small>%</small></div><div class="zm-kpi-foot"><span class="zm-delta up">−0.08 pts</span> vs last week</div></div>
+    <div class="zm-kpi"><div class="zm-kpi-label">Open incidents</div><div class="zm-kpi-value"><span data-zm-count="3">3</span></div><div class="zm-kpi-foot"><span class="zm-pill zm-pill--bad"><span class="zm-dot"></span>1 critical</span></div></div>
   </section>
 
-  <section class="row">
-    <div class="zm-card"><div class="zm-card-head"><h3 class="zm-card-title">Traffic by region</h3><span class="zm-label">k req/min</span></div><canvas id="traffic" height="120"></canvas></div>
-    <div class="zm-card"><div class="zm-card-head"><h3 class="zm-card-title">Error budget</h3><span class="zm-label">30-day</span></div><canvas id="budget" height="200"></canvas></div>
-  </section>
-
-  <section class="zm-card zm-card--flush" style="margin-top:16px">
-    <div class="zm-card-head"><h3 class="zm-card-title">Services</h3>
-      <div class="zm-row"><button class="zm-chip" type="button" aria-pressed="true">All</button><button class="zm-chip zm-chip--red" type="button" aria-pressed="false">Incidents</button></div></div>
-    <div class="zm-table-wrap">
-    <table id="services" class="zm-table">
-      <thead><tr><th>Service</th><th>Owner</th><th class="num">RPS</th><th class="num">p95 (ms)</th><th class="num">Errors</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>checkout-api</td><td>Payments</td><td class="num">12,400</td><td class="num">184</td><td class="num">0.21%</td><td><span class="zm-pill zm-pill--ok">Healthy</span></td></tr>
-        <tr><td>search</td><td>Discovery</td><td class="num">9,880</td><td class="num">241</td><td class="num">0.64%</td><td><span class="zm-pill zm-pill--warn">Degraded</span></td></tr>
-        <tr><td>inventory-sync</td><td>Supply</td><td class="num">2,310</td><td class="num">512</td><td class="num">3.10%</td><td><span class="zm-pill zm-pill--bad">Incident</span></td></tr>
-        <tr><td>auth</td><td>Platform</td><td class="num">15,020</td><td class="num">96</td><td class="num">0.05%</td><td><span class="zm-pill zm-pill--ok">Healthy</span></td></tr>
-        <tr><td>notifications</td><td>Growth</td><td class="num">4,600</td><td class="num">158</td><td class="num">0.33%</td><td><span class="zm-pill zm-pill--ok">Healthy</span></td></tr>
-      </tbody>
-    </table>
+  <section class="zm-section">
+    <div class="zm-kicker zm-reveal">01 · Traffic</div>
+    <h2 class="zm-section-title zm-reveal">US carries the load. <em>Friday peaked.</em></h2>
+    <div class="row zm-reveal-group">
+      <div class="zm-card"><div class="zm-card-head"><h3 class="zm-card-title">Traffic by region</h3><span class="zm-label">k req/min</span></div><canvas id="traffic" height="120"></canvas></div>
+      <div class="zm-card"><div class="zm-card-head"><h3 class="zm-card-title">Error budget</h3><span class="zm-label">30-day</span></div>
+        <div class="budget-wrap"><canvas id="budget" height="200"></canvas>
+          <div class="budget-center"><div><div class="zm-figure"><span data-zm-count="62">62</span><small>%</small></div><div class="zm-label">remaining</div></div></div></div></div>
     </div>
   </section>
+
+  <section class="zm-section">
+    <div class="zm-kicker zm-reveal">02 · Health</div>
+    <h2 class="zm-section-title zm-reveal">Fourteen days, five services. <em>One keeps going red.</em></h2>
+    <div class="zm-card zm-reveal" style="overflow-x:auto">
+      <div class="zm-strip" id="strip" style="--zm-strip-cols:14;min-width:520px" role="img" aria-label="Daily health for five services over fourteen days"></div>
+      <div class="zm-legend" style="margin-top:16px">
+        <span><i style="background:var(--zm-s2)"></i>healthy</span><span><i style="background:var(--zm-s4)"></i>degraded</span>
+        <span><i style="background:var(--zm-s1)"></i>incident</span><span><i style="box-shadow:inset 0 0 0 1px var(--zm-border)"></i>no traffic</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="zm-section">
+    <div class="zm-kicker zm-reveal">03 · Live incident</div>
+    <h2 class="zm-section-title zm-reveal">inventory-sync, 41 minutes in. <em>Mitigating now.</em></h2>
+    <div class="zm-card zm-reveal" style="padding:28px 20px">
+      <ol class="zm-chain" style="--zm-chain-n:5" aria-label="Incident timeline">
+        <li><span class="zm-node ok">✓</span><div class="zm-chain-label">Detected</div><div class="zm-chain-sub">09:12 · error rate 3.1%</div></li>
+        <li><span class="zm-node ok">✓</span><div class="zm-chain-label">Paged</div><div class="zm-chain-sub">09:14 · Supply on-call</div></li>
+        <li><span class="zm-node ok">✓</span><div class="zm-chain-label">Cause found</div><div class="zm-chain-sub">09:31 · stale cache key</div></li>
+        <li><span class="zm-node bad live">4</span><div class="zm-chain-label">Mitigating</div><div class="zm-chain-sub">rolling restart, 3 of 8</div></li>
+        <li><span class="zm-node">5</span><div class="zm-chain-label">Resolved</div><div class="zm-chain-sub">not yet</div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="zm-section">
+    <div class="zm-kicker zm-reveal">04 · Services</div>
+    <h2 class="zm-section-title zm-reveal">Every service, <em>sorted by trouble.</em></h2>
+    <div class="zm-card zm-card--flush zm-reveal">
+      <div class="zm-card-head"><span class="zm-label">5 services · 44,210 rps</span>
+        <div class="zm-keys"><button class="zm-chip" type="button" aria-pressed="true">All</button><button class="zm-chip zm-chip--red" type="button" aria-pressed="false">Incidents</button><button class="zm-chip zm-chip--ochre" type="button" aria-pressed="false">Degraded</button></div></div>
+      <div class="zm-table-wrap">
+      <table id="services" class="zm-table zm-table--animate">
+        <thead><tr><th>Service</th><th>Owner</th><th class="num">RPS</th><th class="num">p95 (ms)</th><th class="num">Errors</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>inventory-sync</td><td>Supply</td><td class="num">2,310</td><td class="num">512</td><td class="num">3.10%</td><td><span class="zm-pill zm-pill--bad">Incident</span></td></tr>
+          <tr><td>search</td><td>Discovery</td><td class="num">9,880</td><td class="num">241</td><td class="num">0.64%</td><td><span class="zm-pill zm-pill--warn">Degraded</span></td></tr>
+          <tr><td>checkout-api</td><td>Payments</td><td class="num">12,400</td><td class="num">184</td><td class="num">0.21%</td><td><span class="zm-pill zm-pill--ok">Healthy</span></td></tr>
+          <tr><td>notifications</td><td>Growth</td><td class="num">4,600</td><td class="num">158</td><td class="num">0.33%</td><td><span class="zm-pill zm-pill--ok">Healthy</span></td></tr>
+          <tr><td>auth</td><td>Platform</td><td class="num">15,020</td><td class="num">96</td><td class="num">0.05%</td><td><span class="zm-pill zm-pill--ok">Healthy</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="zm-section" style="text-align:center;margin-top:88px">
+    <div class="zm-figure zm-reveal"><span data-zm-count="0" data-zm-from="3">0</span><small>pages unanswered</small></div>
+    <p class="zm-muted zm-reveal" style="margin-top:12px">Every alert in the last 7 days was acknowledged within 5 minutes.</p>
+  </section>
 </main>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="../skills/zeromark-style/assets/zeromark-charts.js"></script>
+<script src="../skills/zeromark-style/assets/zeromark-fx.js"></script>
 <script>
+  // --- original chart code, plus the theme call ---
   ZeromarkCharts.chartjs(Chart, 'auto');
   const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  new Chart(document.getElementById('traffic'), { type: 'line', data: { labels: days, datasets: [
-    { label: 'EU', data: [18,21,20,24,26,19,17] }, { label: 'US', data: [22,24,27,25,29,23,20] }, { label: 'APAC', data: [9,10,12,11,13,12,10] } ] } });
+  const regions = { EU: [18,21,20,24,26,19,17], US: [22,24,27,25,29,23,20], APAC: [9,10,12,11,13,12,10] };
+  new Chart(document.getElementById('traffic'), { type: 'line', data: { labels: days, datasets:
+    Object.entries(regions).map(([label, data]) => ({ label, data })) } });
   const z = ZeromarkCharts.tokens('auto');
   new Chart(document.getElementById('budget'), { type: 'doughnut', data: { labels: ['Used','Remaining'],
-    datasets: [{ data: [38, 62], backgroundColor: [z.flame, z.mode === 'dark' ? '#3a342e' : '#efe9dd'] }] }, options: { cutout: '72%' } });
+    datasets: [{ data: [38, 62], backgroundColor: [z.flame, z.mode === 'dark' ? '#3a342e' : '#efe9dd'] }] },
+    options: { cutout: '74%', plugins: { legend: { display: false } } } });
   document.getElementById('refresh').addEventListener('click', e => { e.preventDefault(); console.log('refresh'); });
+
+  // --- signature layer ---
+  // masthead confetti settles into this page's own traffic data, stacked by region
+  ZeromarkFX.field(document.getElementById('field'), {
+    stacks: days.map((_, i) => [regions.EU[i], regions.US[i], regions.APAC[i]]),  // same order/colours as the line chart
+    colLabels: days,
+    legend: Object.keys(regions),
+    colors: [z.series[0], z.series[1], z.series[2]],
+    clear: document.getElementById('headline'),
+    area: { x: .56, y: .16, w: .38, h: .66 },
+  });
+
+  // health strip (illustrative data): 5 services x 14 days
+  const svc = ['inventory-sync', 'search', 'checkout-api', 'notifications', 'auth'];
+  const state = (s, d) => s === 0 ? (d > 10 ? 'bad' : d > 7 ? 'warn' : d === 3 ? 'warn' : 'ok')
+    : s === 1 ? (d === 13 || d === 6 ? 'warn' : 'ok') : s === 3 && d === 9 ? 'off' : 'ok';
+  let html = '<span></span>';
+  for (let d = 0; d < 14; d++) html += `<span class="zm-strip-head">${d % 2 ? '' : d + 1}</span>`;
+  svc.forEach((name, s) => {
+    html += `<span class="zm-strip-name">${name}</span>`;
+    for (let d = 0; d < 14; d++) html += `<span class="zm-cell ${state(s, d)}${s === 0 && d === 13 ? ' mark' : ''}"></span>`;
+  });
+  document.getElementById('strip').innerHTML = html;
+
+  ZeromarkFX.init();
 </script>
 </body>
 </html>

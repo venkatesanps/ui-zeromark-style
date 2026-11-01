@@ -4,9 +4,12 @@ Measured from zeromark.io on 2026-11-01 (raw capture: `captured-tokens.json`), t
 dashboards. The dark theme is derived; the original is light-only.
 
 ## 1. What the style is
-Warm, editorial and calm. It reads like printed paper that happens to be interactive. Its impact
-comes from **restraint**: one accent colour, two typefaces, hairline borders, generous space and
-numbers set in monospace. If a screen looks busy, remove something before adding anything.
+Warm, editorial and calm. It reads like printed paper that happens to be interactive. It works on two levels,
+and you need **both**:
+- **The base:** one accent colour, two typefaces, hairline borders, and numbers set in monospace. Restraint.
+- **The signature:** data rendered as confetti that settles into order, statement headlines with a flame second
+  line, giant mono figures, numbered kickers, and motion that tells a story. Without this layer it's just a beige theme.
+Keep the cards and the data calm, and put the drama around them (section 8).
 
 ## 2. Palette roles (light / dark)
 
@@ -91,5 +94,24 @@ Headings never go below 700 or above 700. Mono never goes bold beyond 500.
 - Do keep the background paper-coloured and use the card colour only for surfaces that hold content.
 - Do put units and comparison text in muted mono next to numbers ("42 ms", "vs last week").
 - Don't introduce new colours, gradients or glassmorphism. Don't use bold mono. Don't use flame for errors (use `--zm-bad`).
-- Don't centre dashboard content. The centred single column is for landing pages only.
+- Don't centre dashboard grids. Centring is for landing pages and closing figures.
+- Don't stop at the palette. A restyle without the signature layer (section 8) isn't done.
 - Don't use zeromark's logo, name, illustrations or copy.
+
+## 8. Signature layer (expressive level, the default)
+
+| Element | Class / API | Rule |
+|---|---|---|
+| Masthead | `zm-masthead zm-rings` + `canvas.zm-field` | Top of the page, below the top bar. Copy on the left, data settles on the right (bottom band on phones). |
+| Confetti → data | `ZeromarkFX.field(canvas, {stacks / columns / cells, colLabels, legend, clear})` | Must settle into a **real series from the page**: the headline metric over time, or a status grid. Same series colours as the page's charts. `clear` = the headline element. |
+| Statement headline | `h1.zm-statement` with `<em>` second half | First half: the top number in words. Second half (flame): what needs attention. Both derived from data. |
+| Numbered sections | `section.zm-section` > `.zm-kicker` "01 · Name" + `h2.zm-section-title` with `<em>` | The `em` states the section's takeaway ("Friday peaked."). Neutral title if no takeaway is derivable. |
+| Count-ups | `data-zm-count="48210"` (`data-zm-decimals`, `data-zm-from`) | KPI values, statement number, figures. Keep the final value as the element's text, so no-JS still shows it. |
+| Reveals | `zm-reveal`, `zm-reveal-group`, `zm-table--animate` | Cards rise in staggered; table rows slide in with a flame wash. |
+| Mono figure | `zm-figure` + `<small>unit</small>` | Doughnut centres, section anchors, closing line ("0 pages unanswered"). At most one per section. |
+| Strip | `.zm-strip` with `.zm-cell.ok/warn/bad/off/na/mark` | Entity × time status (uptime, roster, coverage, SLA). The dashboard equivalent of the confetti grid. |
+| Chain | `ol.zm-chain` > `li` > `.zm-node.ok/warn/bad/live` | Timelines, pipelines, funnels, approval steps. The dashed line draws in and nodes pop. `live` adds a pulsing halo. |
+| Keycaps | `.zm-keys` > `.zm-chip(--red/--green/--blue/--ochre/--lav)` | Quick filters and keyboard shortcuts. |
+
+Motion budget: everything finishes within ~2.5s of load or of scrolling into view. Nothing loops except a `live` halo.
+`prefers-reduced-motion` shows the settled state immediately; `zeromark-fx.js` handles this.

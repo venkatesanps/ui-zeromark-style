@@ -2,8 +2,10 @@
 
 A Claude Code plugin that restyles **any dashboard or web UI, in any stack**, into the zeromark visual
 style: warm cream paper, near-black ink, one vermilion accent, Space Grotesk headings with IBM Plex Mono
-for numbers and labels, hairline cards and keycap chips. It changes styling only, then proves it
-with before/after screenshots and automated contrast and overflow checks.
+for numbers and labels, hairline cards and keycap chips. It keeps behaviour intact, adds the signature
+layer (a confetti field that settles into your dashboard's own data, statement headlines, mono figures and
+numbered sections), then proves it with before/after screenshots and automated contrast and overflow checks.
+Ask for the *quiet* level if you only want the palette and components.
 
 | Before | After (light) | After (dark) |
 |---|---|---|
@@ -18,6 +20,7 @@ Same IDs, same handlers, same data.
 |---|---|
 | `skills/zeromark-style/` | **The skill.** Workflow, style guide, per-stack recipes, assets and QA script |
 | `skills/zeromark-style/assets/zeromark.css` | Drop-in stylesheet: tokens (light/dark/auto), `zm-*` components, and **adopt mode** (`<body class="zm-adopt">` restyles bare HTML) |
+| `skills/zeromark-style/assets/zeromark-fx.js` | **Signature layer**: confetti field that settles into your own data, count-ups, reveals, status strips, timelines |
 | `skills/zeromark-style/assets/zeromark-charts.js` | Chart themes: Chart.js, ECharts, Plotly, Highcharts, ApexCharts, Vega; raw tokens for Recharts/D3/Nivo |
 | `skills/zeromark-style/assets/tailwind.preset.js` | Tailwind v3 preset (v4 `@theme` snippet in the header) |
 | `skills/zeromark-style/assets/tokens.json` | All tokens as data, for Python, R, BI tools, CSS-in-JS |

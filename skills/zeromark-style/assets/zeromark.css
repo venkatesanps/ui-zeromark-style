@@ -194,6 +194,11 @@ body.zm-base, body.zm-adopt { margin: 0; }
 .zm-nav a { font: 500 14px var(--zm-font); color: var(--zm-soft); text-decoration: none; padding: 6px 10px; border-radius: var(--zm-r-sm); transition: background var(--zm-fast) ease, color var(--zm-fast) ease; }
 .zm-nav a:hover { background: var(--zm-sunken); color: var(--zm-ink); }
 .zm-nav a[aria-current="page"], .zm-nav a.is-active { color: var(--zm-ink); background: var(--zm-card); box-shadow: inset 0 0 0 1px var(--zm-border); }
+@media (max-width: 760px) {
+  .zm-topbar { padding: var(--zm-2) var(--zm-4); gap: var(--zm-3); }
+  .zm-topbar .zm-nav { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+  .zm-topbar .zm-nav a { white-space: nowrap; }
+}
 .zm-sidebar { width: 232px; flex: none; padding: var(--zm-5) var(--zm-3); border-right: 1px solid var(--zm-border); background: var(--zm-paper); }
 .zm-sidebar .zm-label { padding: 0 10px; margin: var(--zm-5) 0 var(--zm-2); display: block; }
 .zm-sidebar .zm-nav { flex-direction: column; }
@@ -310,10 +315,96 @@ button.zm-chip, a.zm-chip, label.zm-chip { cursor: pointer; text-decoration: non
 .zm-skeleton { border-radius: var(--zm-r-sm); background: linear-gradient(90deg, var(--zm-sunken) 25%, var(--zm-card) 50%, var(--zm-sunken) 75%); background-size: 200% 100%; animation: zm-shimmer 1.4s linear infinite; min-height: 1em; }
 @keyframes zm-shimmer { to { background-position: -200% 0; } }
 
-/* ---------- Signature touches (use sparingly) ---------- */
+/* ==========================================================================
+   Signature layer: what makes it look like zeromark rather than "a beige theme".
+   Pair with zeromark-fx.js. Hidden-until-revealed states only apply once the
+   script has added .zm-fx to <html>, so pages without JS still show everything.
+   ========================================================================== */
+
+/* Masthead: statement headline over a confetti field that settles into data */
+.zm-masthead { position: relative; isolation: isolate; overflow: hidden; min-height: clamp(340px, 46vh, 460px);
+  padding: var(--zm-10) var(--zm-6) var(--zm-8); border-bottom: 1px solid var(--zm-border-soft); }
+.zm-masthead > .zm-field, .zm-field { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; display: block; pointer-events: none; }
+.zm-masthead-inner { max-width: 1280px; margin: 0 auto; position: relative; }
+.zm-masthead-copy { max-width: min(640px, 100%); display: inline-block; }
+.zm-statement { font: 700 clamp(32px, 4.2vw, 54px)/1.03 var(--zm-font); letter-spacing: var(--zm-track-display); color: var(--zm-ink); margin: 14px 0 0; text-wrap: balance; }
+.zm-statement em { font-style: normal; color: var(--zm-flame); display: block; }
+.zm-masthead .zm-lede { margin-top: var(--zm-4); }
+.zm-masthead-meta { display: flex; gap: var(--zm-6); flex-wrap: wrap; margin-top: var(--zm-6); }
+@media (max-width: 760px) { .zm-masthead { padding: var(--zm-8) var(--zm-4) 270px; } }
+
+/* The narrative number: giant mono figure with a muted unit word */
+.zm-figure { display: inline-flex; align-items: baseline; gap: .16em; font: 400 clamp(56px, 7vw, 96px)/.95 var(--zm-mono);
+  letter-spacing: -.035em; color: var(--zm-ink); font-variant-numeric: tabular-nums; }
+.zm-figure small { font-size: .3em; letter-spacing: 0; color: var(--zm-muted); }
+
+/* Section header with numbered kicker: "01 · TRAFFIC" */
+.zm-section { margin-top: var(--zm-12); }
+.zm-section > .zm-kicker { display: flex; align-items: center; gap: 10px; }
+.zm-section > .zm-kicker::after { content: ""; flex: 1; border-top: 1px dashed var(--zm-border); }
+.zm-section-title { font: 700 clamp(24px, 2.6vw, 32px)/1.08 var(--zm-font); letter-spacing: -.025em; color: var(--zm-ink); margin: var(--zm-3) 0 var(--zm-2); text-wrap: balance; }
+.zm-section-title em { font-style: normal; color: var(--zm-flame); }
+.zm-section-lede { color: var(--zm-soft); max-width: 70ch; margin: 0 0 var(--zm-5); }
+
+/* Reveal */
+.zm-fx .zm-reveal { opacity: 0; transform: translateY(14px); transition: opacity .7s var(--zm-ease), transform .7s var(--zm-ease); transition-delay: calc(var(--zm-i, 0) * 70ms); }
+.zm-fx .zm-reveal.is-in { opacity: 1; transform: none; }
+
+/* Table rows slide in with a flame wash */
+.zm-fx .zm-table--animate tbody tr { opacity: 0; }
+.zm-fx .zm-table--animate.is-in tbody tr { animation: zm-row-form .6s var(--zm-ease) both; animation-delay: calc(var(--zm-i, 0) * 70ms + 120ms); }
+@keyframes zm-row-form { 0% { opacity: 0; transform: translateX(-10px); background: var(--zm-flame-wash); } 100% { opacity: 1; transform: none; background: transparent; } }
+
+/* Strip: rows x columns of rounded bars (uptime, roster, coverage, heat) */
+.zm-strip { display: grid; grid-template-columns: var(--zm-strip-label, 132px) repeat(var(--zm-strip-cols, 14), minmax(8px, 1fr));
+  gap: 6px 5px; align-items: center; font: 400 11px var(--zm-mono); color: var(--zm-muted); min-width: 0; }
+.zm-strip > .zm-strip-head { text-align: center; padding-bottom: 2px; }
+.zm-strip > .zm-strip-name { color: var(--zm-ink); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.zm-cell { height: 14px; border-radius: 4px; background: var(--c, var(--zm-s2)); }
+.zm-cell.ok { --c: var(--zm-s2); } .zm-cell.warn { --c: var(--zm-s4); } .zm-cell.bad { --c: var(--zm-s1); } .zm-cell.info { --c: var(--zm-s3); }
+.zm-cell.off { background: transparent; box-shadow: inset 0 0 0 1px var(--zm-border); }
+.zm-cell.na { background: repeating-linear-gradient(135deg, var(--zm-sunken) 0 4px, transparent 4px 8px); }
+.zm-cell.mark { outline: 2px solid var(--zm-flame); outline-offset: 1px; }
+.zm-fx .zm-strip .zm-cell { opacity: 0; transform: scale(.6); }
+.zm-fx .zm-strip.is-in .zm-cell { animation: zm-cell-pop .45s var(--zm-ease) both; animation-delay: calc(var(--zm-i, 0) * 6ms); }
+@keyframes zm-cell-pop { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+
+/* Chain: nodes joined by a dashed line that draws in (timelines, pipelines, tiers) */
+.zm-chain { list-style: none; margin: 0; padding: 0; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); position: relative; }
+.zm-chain::before { content: ""; position: absolute; left: calc(50% / var(--zm-chain-n, 5)); right: calc(50% / var(--zm-chain-n, 5)); top: 21px;
+  border-top: 2px dashed var(--zm-soft); opacity: .7; transform-origin: left; }
+.zm-chain > li { position: relative; text-align: center; padding: 0 6px; }
+.zm-node { width: 42px; height: 42px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center;
+  font: 500 13px var(--zm-mono); color: var(--zm-ink); background: var(--zm-card); border: 1px solid var(--zm-border); position: relative; }
+.zm-node.ok { background: var(--zm-ok-bg); border-color: var(--zm-ok-bd); color: var(--zm-ok); }
+.zm-node.warn { background: var(--zm-warn-bg); border-color: var(--zm-warn-bd); color: var(--zm-warn); }
+.zm-node.bad { background: var(--zm-bad-bg); border-color: var(--zm-bad-bd); color: var(--zm-bad); }
+.zm-node.live::after { content: ""; position: absolute; inset: -1px; border-radius: 50%; border: 2px solid var(--zm-flame); animation: zm-halo 1.8s ease-out infinite; }
+@keyframes zm-halo { from { transform: scale(1); opacity: .9; } to { transform: scale(1.7); opacity: 0; } }
+.zm-chain .zm-chain-label { margin-top: 10px; font: 500 11px/1.35 var(--zm-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--zm-ink); }
+.zm-chain .zm-chain-sub { margin-top: 3px; font-size: 13px; line-height: 1.4; color: var(--zm-muted); }
+.zm-fx .zm-chain::before { transform: scaleX(0); transition: transform 1.3s var(--zm-ease) .15s; }
+.zm-fx .zm-chain.is-in::before { transform: scaleX(1); }
+.zm-fx .zm-chain .zm-node { transform: scale(0); }
+.zm-fx .zm-chain.is-in .zm-node { animation: zm-node-form .7s var(--zm-ease) both; animation-delay: calc(var(--zm-i, 0) * 140ms + .2s); }
+@keyframes zm-node-form { 0% { opacity: 0; transform: scale(0); } 62% { opacity: 1; transform: scale(1.25); } 100% { opacity: 1; transform: scale(1); } }
+@media (max-width: 760px) {
+  .zm-chain { grid-auto-flow: row; gap: 16px; }
+  .zm-chain::before { left: 20px; right: auto; top: 21px; bottom: 21px; border-top: 0; border-left: 2px dashed var(--zm-soft); transform-origin: top; }
+  .zm-fx .zm-chain::before { transform: scaleY(0); } .zm-fx .zm-chain.is-in::before { transform: scaleY(1); }
+  .zm-chain > li { display: grid; grid-template-columns: 42px 1fr; column-gap: 14px; text-align: left; padding: 0; }
+  .zm-chain .zm-node { margin: 0; grid-row: span 2; }
+  .zm-chain .zm-chain-label { margin-top: 4px; }
+  .zm-strip { --zm-strip-label: 86px; gap: 5px 3px; }
+}
+
+/* Keycap legend row (shortcuts, actions, filters) */
+.zm-keys { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* Texture */
 .zm-rings { position: relative; isolation: isolate; }
-.zm-rings::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: repeating-radial-gradient(ellipse at 50% 50%, transparent 0 46px, rgba(120,113,108,.04) 47px 48px);
+.zm-rings::before { content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none;
+  background: repeating-radial-gradient(ellipse at 50% 50%, transparent 0 46px, rgba(120,113,108,.045) 47px 48px);
   -webkit-mask-image: radial-gradient(ellipse 60% 55% at 50% 50%, #000, transparent 75%);
           mask-image: radial-gradient(ellipse 60% 55% at 50% 50%, #000, transparent 75%); }
 .zm-rise { animation: zm-rise .6s var(--zm-ease) both; animation-delay: calc(var(--zm-i, 0) * 60ms); }
@@ -325,6 +416,8 @@ button.zm-chip, a.zm-chip, label.zm-chip { cursor: pointer; text-decoration: non
 .zm-base :focus-visible, .zm-adopt :focus-visible, [class*="zm-"]:focus-visible { outline: 2px solid var(--zm-flame); outline-offset: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .zm-rise, .zm-pop, .zm-skeleton { animation: none !important; }
+  .zm-rise, .zm-pop, .zm-skeleton, .zm-node.live::after { animation: none !important; }
+  .zm-fx .zm-reveal, .zm-fx .zm-table--animate tbody tr, .zm-fx .zm-strip .zm-cell, .zm-fx .zm-chain .zm-node { opacity: 1 !important; transform: none !important; animation: none !important; }
+  .zm-fx .zm-chain::before { transform: none !important; }
   [class*="zm-"], .zm-adopt * { transition-duration: .01ms !important; }
 }

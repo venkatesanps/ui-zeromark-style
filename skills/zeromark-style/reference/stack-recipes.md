@@ -24,6 +24,10 @@ woff2 files and add `@font-face` rules.
 4. If old CSS still wins (e.g. `table { background: #fff }` with higher specificity), neutralise that rule
    in the old file or add a scoped override. Don't use `!important` sprays.
 5. Dark mode: `<html data-zm-theme="auto">` (follow OS) or toggle `"dark"` / `"light"` from your existing switch.
+6. Signature layer: `<script src="/static/zeromark/zeromark-fx.js"></script>` at the end of `<body>`, then
+   `ZeromarkFX.field(document.querySelector('.zm-field'), { stacks or columns or cells, colLabels, legend, clear: headlineEl })`
+   and `ZeromarkFX.init()`. In React/Vue/Svelte, call these in a mount effect (`useEffect`, `onMounted`, `onMount`) on
+   the canvas ref, and call `ZeromarkFX.reveal(containerEl)` again after data loads, so new rows animate in.
 
 KPI markup:
 ```html
