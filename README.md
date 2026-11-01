@@ -48,18 +48,64 @@ To make it available to everyone on a repo automatically, commit this to the rep
 }
 ```
 
-### Option B: copy the folders
+### Option B: copy the folders into your repo (no plugin commands needed)
+Use this if `/plugin` commands or marketplaces aren't allowed at work. A plugin is just a folder of files,
+and Claude Code picks up skills and agents from your repo's `.claude/` folder automatically.
+
+**1. Download the code.** Either:
+- ZIP: <https://github.com/venkatesanps/ui-zeromark-style/archive/refs/heads/main.zip>, then unzip it (the folder is `ui-zeromark-style-main`)
+- git: `git clone https://github.com/venkatesanps/ui-zeromark-style`
+
+If GitHub downloads are blocked at work, download it elsewhere and bring it in however you normally move files.
+
+**2. Copy two folders into your repo.** From your repo's root, with `<downloaded>` being the folder from step 1:
+
+Mac / Linux / Git Bash
 ```bash
-git clone https://github.com/venkatesanps/ui-zeromark-style /tmp/zm
 mkdir -p .claude/skills .claude/agents
-cp -r /tmp/zm/skills/zeromark-style .claude/skills/          # this repo only
-cp /tmp/zm/agents/zeromark-restyler.md .claude/agents/
-# or into ~/.claude/skills and ~/.claude/agents to have it in every repo on your machine
+cp -r <downloaded>/skills/zeromark-style .claude/skills/
+cp <downloaded>/agents/zeromark-restyler.md .claude/agents/
 ```
 
+Windows PowerShell
+```powershell
+New-Item -ItemType Directory -Force .claude\skills, .claude\agents | Out-Null
+Copy-Item -Recurse <downloaded>\skills\zeromark-style .claude\skills\
+Copy-Item <downloaded>\agents\zeromark-restyler.md .claude\agents\
+```
+
+Your repo then looks like:
+```
+your-repo/
+  .claude/
+    skills/zeromark-style/        SKILL.md, assets/, reference/, scripts/
+    agents/zeromark-restyler.md
+```
+
+**3. Use it.** Start a new Claude Code session in that repo (skills load at startup) and ask in plain words, e.g.
+"apply the zeromark style to `dashboards/sales.html`", or type `/zeromark-style`.
+
+Optional:
+- **Share with your team:** commit the `.claude/` folder, and everyone who uses Claude Code on the repo gets the skill.
+- **Use it in every repo on your machine:** copy into `~/.claude/skills/` and `~/.claude/agents/` instead
+  (Windows: `%USERPROFILE%\.claude\skills\` and `%USERPROFILE%\.claude\agents\`).
+- **Capture other sites' styles too:** also copy `skills/ui-from-reference`.
+
+**Updating:** there's no update command with this method. Download again and copy the folder over the old one.
+
 ### Option C: no Claude at all
-`zeromark.css`, `zeromark-charts.js`, `tailwind.preset.js` and `tokens.json` are plain files. Copy them into
-any project and follow `reference/stack-recipes.md` by hand.
+The style files work on their own. Copy these from `skills/zeromark-style/assets/` into your project
+(e.g. `static/zeromark/`) and link them by hand:
+```html
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/zeromark/zeromark.css">
+<body class="zm-adopt"> ... </body>
+<script src="static/zeromark/zeromark-charts.js"></script>   <!-- if you use Chart.js, ECharts, Plotly and similar -->
+<script src="static/zeromark/zeromark-fx.js"></script>       <!-- confetti masthead, count-ups, animations -->
+```
+[`examples/dashboard-after.html`](examples/dashboard-after.html) is a working template to copy from, and
+`skills/zeromark-style/reference/stack-recipes.md` gives the setup for each framework (Tailwind uses
+`tailwind.preset.js`; Python, R and BI tools use the values in `tokens.json`).
 
 ## Use
 
@@ -79,7 +125,7 @@ each component (KPI tiles, tables, filters, charts, forms, states), and verifies
 npm i -D playwright && npx playwright install chromium     # once per machine/project
 node <skill>/scripts/snap.js http://localhost:3000/dashboard design-qa/after --full --widths 1440,390
 ```
-Behind a proxy, or with Chrome already installed, set `CHROMIUM_PATH=/path/to/chrome`. Without
+Behind a proxy, or with Chrome already installed, set `CHROMIUM_PATH=/path/to/chrome`. Playwright is optional. Without
 Playwright the skill still works, but you check the result by eye.
 
 ### Corporate networks
