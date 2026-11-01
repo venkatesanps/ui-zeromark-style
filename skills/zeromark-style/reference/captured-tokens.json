@@ -1,0 +1,444 @@
+{
+  "title": "ZeroMark · Turn your X bookmarks into taste your AI reads",
+  "bodyBg": "rgb(250, 247, 240)",
+  "maxContentWidths": [
+    {
+      "v": "860px",
+      "c": 1
+    },
+    {
+      "v": "692.28px",
+      "c": 1
+    },
+    {
+      "v": "633.31px",
+      "c": 1
+    },
+    {
+      "v": "520px",
+      "c": 1
+    },
+    {
+      "v": "640px",
+      "c": 1
+    }
+  ],
+  "textColors": [
+    {
+      "v": "rgb(28, 25, 23)",
+      "c": 31
+    },
+    {
+      "v": "rgb(68, 64, 60)",
+      "c": 26
+    },
+    {
+      "v": "rgb(209, 58, 34)",
+      "c": 24
+    },
+    {
+      "v": "rgb(112, 106, 101)",
+      "c": 19
+    },
+    {
+      "v": "rgb(106, 100, 92)",
+      "c": 15
+    },
+    {
+      "v": "rgb(240, 71, 44)",
+      "c": 10
+    },
+    {
+      "v": "rgb(255, 255, 255)",
+      "c": 5
+    },
+    {
+      "v": "rgb(38, 90, 59)",
+      "c": 2
+    },
+    {
+      "v": "rgb(62, 90, 116)",
+      "c": 1
+    },
+    {
+      "v": "rgb(47, 111, 79)",
+      "c": 1
+    },
+    {
+      "v": "rgb(250, 247, 240)",
+      "c": 1
+    },
+    {
+      "v": "rgb(76, 47, 191)",
+      "c": 1
+    }
+  ],
+  "backgrounds": [
+    {
+      "v": "rgb(255, 253, 248)",
+      "c": 46.819628124999994
+    },
+    {
+      "v": "rgb(240, 71, 44)",
+      "c": 0.661965625
+    },
+    {
+      "v": "color(srgb 0.94702 0.947412 0.936314)",
+      "c": 0.311471875
+    },
+    {
+      "v": "color(srgb 0.942902 0.953176 0.926157)",
+      "c": 0.311471875
+    },
+    {
+      "v": "color(srgb 0.995882 0.942196 0.916549)",
+      "c": 0.252290625
+    },
+    {
+      "v": "rgb(38, 90, 59)",
+      "c": 0.2312
+    },
+    {
+      "v": "color(srgb 0.941176 0.278431 0.172549 / 0.12)",
+      "c": 0.2032625
+    },
+    {
+      "v": "rgba(0, 0, 0, 0.2)",
+      "c": 0.1702875
+    },
+    {
+      "v": "rgb(28, 25, 23)",
+      "c": 0.1156
+    },
+    {
+      "v": "color(srgb 0.921098 0.895686 0.948235)",
+      "c": 0.1156
+    }
+  ],
+  "gradients": [
+    {
+      "v": "radial-gradient(circle at 35% 28%, color(srgb 0.941176 0.278431 0.172549 / 0.34), color(srgb 0.941176 0.278431 0.172549 / 0.1) 72%)",
+      "c": 1
+    }
+  ],
+  "fonts": [
+    {
+      "v": "Space Grotesk",
+      "c": 84
+    },
+    {
+      "v": "IBM Plex Mono",
+      "c": 36
+    },
+    {
+      "v": "Akmorn Grotesque",
+      "c": 13
+    },
+    {
+      "v": "Instrument Sans",
+      "c": 2
+    },
+    {
+      "v": "Source Serif 4",
+      "c": 1
+    }
+  ],
+  "fontSizes": [
+    {
+      "v": "13px",
+      "c": 35
+    },
+    {
+      "v": "19px",
+      "c": 15
+    },
+    {
+      "v": "12.5px",
+      "c": 12
+    },
+    {
+      "v": "58px",
+      "c": 11
+    },
+    {
+      "v": "14.5px",
+      "c": 10
+    },
+    {
+      "v": "14px",
+      "c": 9
+    },
+    {
+      "v": "16px",
+      "c": 6
+    },
+    {
+      "v": "15px",
+      "c": 6
+    },
+    {
+      "v": "9.5px",
+      "c": 4
+    },
+    {
+      "v": "110px",
+      "c": 3
+    },
+    {
+      "v": "35.2px",
+      "c": 3
+    },
+    {
+      "v": "11px",
+      "c": 3
+    }
+  ],
+  "fontWeights": [
+    {
+      "v": "400",
+      "c": 109
+    },
+    {
+      "v": "700",
+      "c": 25
+    },
+    {
+      "v": "600",
+      "c": 2
+    }
+  ],
+  "letterSpacing": [
+    {
+      "v": "58px / -1.74px",
+      "c": 11
+    },
+    {
+      "v": "14px / 1.96px",
+      "c": 6
+    },
+    {
+      "v": "110px / -3.3px",
+      "c": 3
+    },
+    {
+      "v": "35.2px / -3.3px",
+      "c": 3
+    },
+    {
+      "v": "12.5px / 1.25px",
+      "c": 3
+    },
+    {
+      "v": "10px / 0.5px",
+      "c": 3
+    },
+    {
+      "v": "62px / -1.86px",
+      "c": 2
+    },
+    {
+      "v": "11px / 0.88px",
+      "c": 2
+    }
+  ],
+  "radii": [
+    {
+      "v": "999px",
+      "c": 7
+    },
+    {
+      "v": "7px",
+      "c": 5
+    },
+    {
+      "v": "14px",
+      "c": 4
+    },
+    {
+      "v": "50%",
+      "c": 3
+    },
+    {
+      "v": "8px",
+      "c": 3
+    },
+    {
+      "v": "10px",
+      "c": 1
+    },
+    {
+      "v": "2px",
+      "c": 1
+    }
+  ],
+  "shadows": [
+    {
+      "v": "color(srgb 1 1 1 / 0.55) 0px 1px 0px 0px inset, color(srgb 0.941176 0.278431 0.172549 / 0.48) 0px 0px 0px 1px, color(srgb 0.941177 0.278431 0.172549 / 0.7) 0px 10px 22px -12px",
+      "c": 1
+    }
+  ],
+  "borders": [
+    {
+      "v": "1px solid rgb(231, 224, 211)",
+      "c": 7
+    },
+    {
+      "v": "1px solid color(srgb 0.905882 0.878431 0.827451 / 0.55)",
+      "c": 4
+    },
+    {
+      "v": "1px solid rgba(0, 0, 0, 0)",
+      "c": 1
+    },
+    {
+      "v": "1px solid color(srgb 0.917882 0.674431 0.604784)",
+      "c": 1
+    },
+    {
+      "v": "1px solid color(srgb 0.680549 0.699765 0.700784)",
+      "c": 1
+    },
+    {
+      "v": "1px solid color(srgb 0.660549 0.727765 0.651451)",
+      "c": 1
+    },
+    {
+      "v": "1px solid rgb(76, 47, 191)",
+      "c": 1
+    },
+    {
+      "v": "1px dashed rgb(231, 224, 211)",
+      "c": 1
+    }
+  ],
+  "transitions": [
+    {
+      "v": "color, border-color, background 0.14s, 0.14s, 0.14s ease, ease, ease",
+      "c": 1
+    }
+  ],
+  "filters": [
+    {
+      "v": "backdrop: blur(6px)",
+      "c": 1
+    }
+  ],
+  "headings": [
+    {
+      "tag": "H1",
+      "text": "AI has no taste.Give it yours.",
+      "size": "62px",
+      "weight": "700",
+      "lh": "64.48px",
+      "ls": "-1.86px",
+      "font": "\"Akmorn Grotesque\", \"Akmorn Grotesque Bold\", \"Space Grotesk\", \"Segoe UI\", sans-serif"
+    },
+    {
+      "tag": "H2",
+      "text": "First, ZeroMark reads them.",
+      "size": "58px",
+      "weight": "700",
+      "lh": "60.32px",
+      "ls": "-1.74px",
+      "font": "\"Akmorn Grotesque\", \"Akmorn Grotesque Bold\", \"Space Grotesk\", \"Segoe UI\", sans-serif"
+    },
+    {
+      "tag": "H2",
+      "text": "Then they get mapped.",
+      "size": "58px",
+      "weight": "700",
+      "lh": "60.32px",
+      "ls": "-1.74px",
+      "font": "\"Akmorn Grotesque\", \"Akmorn Grotesque Bold\", \"Space Grotesk\", \"Segoe UI\", sans-serif"
+    },
+    {
+      "tag": "H2",
+      "text": "Then you decide, until there is nothing left.",
+      "size": "58px",
+      "weight": "700",
+      "lh": "60.32px",
+      "ls": "-1.74px",
+      "font": "\"Akmorn Grotesque\", \"Akmorn Grotesque Bold\", \"Space Grotesk\", \"Segoe UI\", sans-serif"
+    },
+    {
+      "tag": "H2",
+      "text": "Fast enough to disappear.",
+      "size": "58px",
+      "weight": "700",
+      "lh": "60.32px",
+      "ls": "-1.74px",
+      "font": "\"Akmorn Grotesque\", \"Akmorn Grotesque Bold\", \"Space Grotesk\", \"Segoe UI\", sans-serif"
+    },
+    {
+      "tag": "H2",
+      "text": "Your taste goes where you work.",
+      "size": "58px",
+      "weight": "700",
+      "lh": "60.32px",
+      "ls": "-1.74px",
+      "font": "\"Akmorn Grotesque\", \"Akmorn Grotesque Bold\", \"Space Grotesk\", \"Segoe UI\", sans-serif"
+    },
+    {
+      "tag": "H2",
+      "text": "Then you hear them, as a podcast.",
+      "size": "58px",
+      "weight": "700",
+      "lh": "60.32px",
+      "ls": "-1.74px",
+      "font": "\"Akmorn Grotesque\", \"Akmorn Grotesque Bold\", \"Space Grotesk\", \"Segoe UI\", sans-serif"
+    },
+    {
+      "tag": "H2",
+      "text": "ZeroMark reads. You decide.",
+      "size": "58px",
+      "weight": "700",
+      "lh": "60.32px",
+      "ls": "-1.74px",
+      "font": "\"Akmorn Grotesque\", \"Akmorn Grotesque Bold\", \"Space Grotesk\", \"Segoe UI\", sans-serif"
+    }
+  ],
+  "buttons": [
+    {
+      "text": "",
+      "bg": "rgba(0, 0, 0, 0)",
+      "bgImage": "radial-gradient(circle at 35% 28%, color(srgb 0.941176 0.278431 0.172549 / 0.34), color(srgb 0.941176 0.278431 0.172549 / 0.1) 72%)",
+      "color": "rgb(240, 71, 44)",
+      "radius": "50%",
+      "padding": "0px",
+      "border": "0px none rgb(240, 71, 44)",
+      "shadow": "color(srgb 1 1 1 / 0.55) 0px 1px 0px 0px inset, color(srgb 0.941176 0.278431 0.172549 / 0.48) 0px 0px 0px 1px, color(srgb 0.941177 0.278431 0.172549 / 0.7) 0px 10px 22px -12px",
+      "size": "16px",
+      "weight": "400"
+    }
+  ],
+  "cssVars": {
+    "--paper": "#faf7f0",
+    "--card": "#fffdf8",
+    "--border": "#e7e0d3",
+    "--ink": "#1c1917",
+    "--soft": "#44403c",
+    "--muted": "#78716c",
+    "--faint": "#a8a29e",
+    "--flame": "#f0472c",
+    "--flame-dark": "#d13a22"
+  },
+  "keyframes": [
+    "@keyframes zm-beckon { \n  0%, 100% { transform: translateY(0px); }\n  45% { transform: translateY(12px); }\n}",
+    "@keyframes zm-chev { \n  0% { opacity: 0.45; }\n  30% { opacity: 1; }\n  70% { opacity: 1; }\n  100% { opacity: 0.45; }\n}",
+    "@keyframes zm-halo { \n  0% { transform: scale(1); opacity: 0.9; }\n  100% { transform: scale(1.7); opacity: 0; }\n}",
+    "@keyframes zm-mini-in { \n  0% { opacity: 0; transform: translateY(4px); }\n  100% { opacity: 1; transform: none; }\n}",
+    "@keyframes zm-row-form { \n  0% { opacity: 0; transform: scaleX(0.9) translateX(-10px); background: color-mix(in srgb, var(--flame) 16%, transparent); }\n  100% { opacity: 1; transform: none; background: transparent; }\n}",
+    "@keyframes zm-node-form { \n  0% { opacity: 0; transform: scale(0); }\n  62% { opacity: 1; transform: scale(1.4); }\n  100% { opacity: 1; transform: scale(1); }\n}",
+    "@keyframes zm-edge-draw { \n  100% { stroke-dashoffset: 0; }\n}",
+    "@keyframes zm-file { \n  0%, 88% { opacity: 0; transform: translateY(6px); }\n  92% { opacity: 1; transform: translateY(0px); }\n  97% { opacity: 1; transform: translateY(0px); }\n  100% { opacity: 0; transform: translateY(0px); }\n}",
+    "@keyframes zm-rise { \n  0% { opacity: 0; transform: translateY(14px); }\n  100% { opacity: 1; transform: none; }\n}",
+    "@keyframes zm-pop { \n  0% { opacity: 0; transform: scale(0.94); }\n  100% { opacity: 1; transform: none; }\n}",
+    "@keyframes calcLedPulse { \n  0%, 100% { box-shadow: rgba(240, 71, 44, 0.55) 0px 0px 0px 0px, rgba(240, 71, 44, 0.7) 0px 0px 8px; }\n  50% { box-shadow: rgba(240, 71, 44, 0) 0px 0px 0px 5px, rgba(240, 71, 44, 0.95) 0px 0px 14px; }\n}",
+    "@keyframes calcCardFloatIn { \n  0% { opacity: 0; transform: translateY(10px) scale(0.99); }\n  100% { opacity: 1; transform: translateY(0px) scale(1); }\n}",
+    "@keyframes calcValuePop { \n  0% { transform: scale(1); }\n  40% { transform: scale(1.035); }\n  100% { transform: scale(1); }\n}"
+  ],
+  "fontLinks": [],
+  "libraries": [],
+  "canvasCount": 4,
+  "videoCount": 0
+}

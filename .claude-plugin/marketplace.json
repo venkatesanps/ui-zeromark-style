@@ -1,0 +1,14 @@
+{
+  "name": "ui-zeromark-style",
+  "owner": { "name": "venkatesanps" },
+  "metadata": {
+    "description": "UI style plugins by venkatesanps."
+  },
+  "plugins": [
+    {
+      "name": "zeromark-style",
+      "source": "./",
+      "description": "Restyle any dashboard or web UI into the zeromark visual style, with a restyler agent, drop-in CSS, chart themes and QA."
+    }
+  ]
+}

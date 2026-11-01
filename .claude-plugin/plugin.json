@@ -1,0 +1,20 @@
+{
+  "name": "zeromark-style",
+  "version": "1.0.0",
+  "description": "Restyle any dashboard or web UI, in any stack, into the zeromark visual style: warm paper, one vermilion accent, Space Grotesk with IBM Plex Mono. Includes a drop-in CSS, chart themes, a Tailwind preset, per-framework recipes, a restyler agent and screenshot/contrast QA.",
+  "author": {
+    "name": "venkatesanps"
+  },
+  "homepage": "https://github.com/venkatesanps/ui-zeromark-style",
+  "repository": "https://github.com/venkatesanps/ui-zeromark-style",
+  "license": "MIT",
+  "keywords": [
+    "design-system",
+    "dashboard",
+    "theme",
+    "css",
+    "restyle",
+    "zeromark"
+  ],
+  "icon": ".claude-plugin/icon.png"
+}

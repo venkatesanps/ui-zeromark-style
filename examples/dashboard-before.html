@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ops Dashboard (before)</title>
+<!-- A typical hand-rolled internal dashboard: system fonts, blue accent, drop shadows. -->
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; background: #eef1f5; color: #333; margin: 0; }
+  header { background: #1f3b73; color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 24px; }
+  header h1 { font-size: 20px; margin: 0; }
+  header nav a { color: #cfd8ea; margin-right: 16px; text-decoration: none; }
+  main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+  .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .card { background: #fff; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,.15); padding: 16px; }
+  .kpi .label { font-size: 13px; color: #777; }
+  .kpi .value { font-size: 30px; font-weight: bold; margin-top: 6px; }
+  .up { color: green; } .down { color: red; }
+  .row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-top: 16px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 8px; border-bottom: 1px solid #ddd; text-align: left; }
+  th { background: #f5f5f5; }
+  .status { padding: 2px 8px; border-radius: 3px; font-size: 12px; color: #fff; }
+  .status.ok { background: #28a745; } .status.warn { background: #e0a800; } .status.bad { background: #dc3545; }
+  button { background: #2f6fde; color: #fff; border: 0; padding: 8px 14px; border-radius: 3px; cursor: pointer; }
+  select, input { padding: 6px; border: 1px solid #bbb; border-radius: 3px; }
+  @media (max-width: 800px) { .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Ops Dashboard</h1>
+  <nav><a href="#">Overview</a><a href="#">Services</a><a href="#">Incidents</a><a href="#">Settings</a></nav>
+</header>
+<main>
+  <div class="toolbar">
+    <label for="range">Range</label>
+    <select id="range"><option>Last 7 days</option><option>Last 30 days</option></select>
+    <input id="q" type="search" placeholder="Filter services">
+    <button id="refresh" type="submit">Refresh</button>
+  </div>
+
+  <section class="kpis">
+    <div class="card kpi"><div class="label">Requests / min</div><div class="value">48,210</div><div class="up">▲ 6.1% vs last week</div></div>
+    <div class="card kpi"><div class="label">p95 latency</div><div class="value">212 ms</div><div class="down">▲ 18 ms vs last week</div></div>
+    <div class="card kpi"><div class="label">Error rate</div><div class="value">0.42%</div><div class="up">▼ 0.08 pts</div></div>
+    <div class="card kpi"><div class="label">Open incidents</div><div class="value">3</div><div>1 critical</div></div>
+  </section>
+
+  <section class="row">
+    <div class="card"><h3>Traffic by region</h3><canvas id="traffic" height="120"></canvas></div>
+    <div class="card"><h3>Error budget</h3><canvas id="budget" height="200"></canvas></div>
+  </section>
+
+  <section class="card" style="margin-top:16px">
+    <h3>Services</h3>
+    <table id="services">
+      <thead><tr><th>Service</th><th>Owner</th><th align="right">RPS</th><th align="right">p95 (ms)</th><th align="right">Errors</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>checkout-api</td><td>Payments</td><td align="right">12,400</td><td align="right">184</td><td align="right">0.21%</td><td><span class="status ok">Healthy</span></td></tr>
+        <tr><td>search</td><td>Discovery</td><td align="right">9,880</td><td align="right">241</td><td align="right">0.64%</td><td><span class="status warn">Degraded</span></td></tr>
+        <tr><td>inventory-sync</td><td>Supply</td><td align="right">2,310</td><td align="right">512</td><td align="right">3.10%</td><td><span class="status bad">Incident</span></td></tr>
+        <tr><td>auth</td><td>Platform</td><td align="right">15,020</td><td align="right">96</td><td align="right">0.05%</td><td><span class="status ok">Healthy</span></td></tr>
+        <tr><td>notifications</td><td>Growth</td><td align="right">4,600</td><td align="right">158</td><td align="right">0.33%</td><td><span class="status ok">Healthy</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  new Chart(document.getElementById('traffic'), { type: 'line', data: { labels: days, datasets: [
+    { label: 'EU', data: [18,21,20,24,26,19,17] }, { label: 'US', data: [22,24,27,25,29,23,20] }, { label: 'APAC', data: [9,10,12,11,13,12,10] } ] } });
+  new Chart(document.getElementById('budget'), { type: 'doughnut', data: { labels: ['Used','Remaining'], datasets: [{ data: [38, 62] }] } });
+  document.getElementById('refresh').addEventListener('click', e => { e.preventDefault(); console.log('refresh'); });
+</script>
+</body>
+</html>
