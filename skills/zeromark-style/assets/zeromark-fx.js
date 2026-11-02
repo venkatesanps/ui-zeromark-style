@@ -284,10 +284,13 @@
    *
    * Layouts: scatter | columns | bars | map | stack | rows | hidden
    *   common scene options: clear (element or false; default: the scene's .zm-scene-copy),
-   *                         region {x, y, w, h} as viewport fractions
+   *                         region {x, y, w, h} as viewport fractions, regionMobile (below 760px)
    *   columns/bars: labels (bool)      map: nodes {key: [fx, fy]}, edges [[keyA, keyB]]
    *   stack: x (0..1), from/to (fraction of particles visible at start/end of the pinned hold)
    *   rows:  one row per group (a horizontal strip), labels (bool)
+   *   grid:  rows = groups, cols = N slots; cells {groupKey: [colIndex, ...]}, per (particles per cell),
+   *          rowLabels (bool), colLabels [...], shade [colIndex] (e.g. closed days), accentCols [colIndex]
+   *   columns/map: unit (string appended to counts, e.g. 'h')
    *
    * Pair with sections marked up as .zm-scene (add .zm-scene--pin to hold the copy in place
    * while particles morph) and counters marked data-zm-scrub="1184 0".
@@ -342,13 +345,21 @@
         if (!s.el || i === 0) return { s0: -1e9, s1: -1e9, top: 0, len: 1 };
         var r = s.el.getBoundingClientRect(), top = r.top + scrollY, h = s.el.offsetHeight;
         var pin = Math.max(0, h - H);
-        return { s0: top - H * .6, s1: top + pin * .35 + (pin ? 0 : -H * .05), top: top, len: Math.max(1, pin) };
+        // pinned: morph while the section arrives and during the first third of its hold.
+        // unpinned (ordinary content): finish the morph before the content reaches mid-screen.
+        return pin ? { s0: top - H * .6, s1: top + pin * .35, top: top, len: pin }
+                   : { s0: top - H, s1: top - H * .4, top: top, len: 1 };
       });
       cache = {};
     }
 
     /* ---------- layouts: return per-particle targets {x, y, a, l, t, al} ---------- */
-    function region(s, def) { var R = Object.assign({}, def, s.region || {}); return { x: R.x * W, y: R.y * H, w: R.w * W, h: R.h * H }; }
+    // phones: formations sit in the lower ~40% so they don't run under the (taller) copy; override with regionMobile
+    function region(s, def) {
+      var R = W < 760 ? Object.assign({ x: .04, y: .56, w: .92, h: .36 }, s.regionMobile || {})
+                      : Object.assign({}, def, s.region || {});
+      return { x: R.x * W, y: R.y * H, w: R.w * W, h: R.h * H };
+    }
 
     function Lscatter() {
       return P.map(function (p) {
@@ -375,8 +386,8 @@
           G.forEach(function (g) {
             var cx = R.x + (g.i + .5) * slot;
             ctx.textAlign = 'center';
-            ctx.fillStyle = css('--zm-ink', '#1c1917'); ctx.fillText(g.label.toUpperCase(), cx, R.y + R.h + 18);
-            ctx.fillStyle = css('--zm-muted', '#716a65'); ctx.fillText(g.count.toLocaleString(), cx, R.y + R.h + 34);
+            ctx.fillStyle = css('--zm-ink', '#1c1917'); ctx.fillText(fit(g.label.toUpperCase(), slot - 4), cx, R.y + R.h + 18);
+            ctx.fillStyle = css('--zm-muted', '#716a65'); ctx.fillText(g.count.toLocaleString() + (s.unit ? ' ' + s.unit : ''), cx, R.y + R.h + 34);
           });
         });
       };
@@ -399,6 +410,46 @@
         });
       };
       return out;
+    }
+    function Lgrid(s) {
+      // rows = groups, columns = s.cols slots (e.g. days). s.cells[groupKey] = list of column indexes;
+      // particle k of a group goes to cell cells[floor(k / per)], packed as a small block of `per` bars.
+      var R = region(s, { x: .08, y: .44, w: .84, h: .46 });
+      var K = G.length, cols = s.cols || 7, per = s.per || 1;
+      var lw = s.rowLabels ? Math.min(110, R.w * .16) : 0;
+      var cw = (R.w - lw) / cols, rh = R.h / K;
+      var subC = per > 3 ? 2 : 1, subR = Math.ceil(per / subC);
+      var bh = Math.max(2, Math.min(5, (rh * .72) / subR - 1.2)), bl = Math.max(4, (cw * .78) / subC - 2);
+      var out = P.map(function (p) {
+        var g = G[p.g], list = (s.cells && s.cells[g.key]) || [], ci = Math.floor(p.k / per), sub = p.k % per;
+        if (ci >= list.length) return { x: p.rx * W, y: -40, a: p.ra, l: 8, t: 4, al: 0 };
+        var cx = R.x + lw + (list[ci] + .5) * cw, cy = R.y + (g.i + .5) * rh;
+        var sx = (sub % subC - (subC - 1) / 2) * (bl + 2), sy = (Math.floor(sub / subC) - (subR - 1) / 2) * (bh + 1.2);
+        return { x: cx + sx, y: cy + sy, a: 0, l: bl, t: bh, al: .95 };
+      });
+      out.under = function (al) {
+        if (!s.shade) return;
+        ctx.save(); ctx.globalAlpha = al * .5; ctx.fillStyle = css('--zm-sunken', '#f3efe6');
+        s.shade.forEach(function (c) { ctx.fillRect(R.x + lw + c * cw + cw * .08, R.y - 4, cw * .84, R.h + 8); });
+        ctx.restore();
+      };
+      out.overlay = function (al) {
+        label(al, function () {
+          ctx.textAlign = 'left'; ctx.fillStyle = css('--zm-ink', '#1c1917');
+          if (s.rowLabels) G.forEach(function (g) { ctx.fillText(fit(g.label, lw - 8), R.x, R.y + (g.i + .5) * rh); });
+          ctx.textAlign = 'center';
+          (s.colLabels || []).forEach(function (t, c) {
+            ctx.fillStyle = (s.accentCols || []).indexOf(c) >= 0 ? css('--zm-flame-dark', '#d13a22') : css('--zm-muted', '#716a65');
+            ctx.fillText(fit(String(t), cw), R.x + lw + (c + .5) * cw, R.y - 14);
+          });
+        });
+      };
+      return out;
+    }
+    function fit(text, maxW) {
+      if (ctx.measureText(text).width <= maxW) return text;
+      var t = text; while (t.length > 1 && ctx.measureText(t + '…').width > maxW) t = t.slice(0, -1);
+      return t.length > 1 ? t + '…' : text.charAt(0);
     }
     function Lmap(s) {
       var R = region(s, { x: .08, y: .52, w: .84, h: .36 });
@@ -428,7 +479,7 @@
           G.forEach(function (g) {
             var c = pos[g.key], rad = rmax * Math.sqrt(g.n / nmax);
             ctx.textAlign = 'center';
-            ctx.fillStyle = css('--zm-ink', '#1c1917'); ctx.fillText(g.label.toUpperCase(), c[0], c[1] + rad + 18);
+            ctx.fillStyle = css('--zm-ink', '#1c1917'); ctx.fillText(fit(g.label.toUpperCase(), R.w / K + 10), c[0], c[1] + rad + 18);
             ctx.font = '500 15px ' + css('--zm-mono', 'monospace'); ctx.fillText(g.count.toLocaleString(), c[0], c[1] + rad + 36);
             ctx.font = '500 11px ' + css('--zm-mono', 'monospace');
           });
@@ -461,7 +512,7 @@
       if (s.layout === 'stack') return Lstack(s, hold);       // depends on hold progress: not cached
       if (cache[i]) return cache[i];
       var L = s.layout === 'columns' ? Lcolumns(s) : s.layout === 'bars' ? Lcolumns(s, true) : s.layout === 'map' ? Lmap(s)
-        : s.layout === 'rows' ? Lrows(s) : s.layout === 'hidden' ? Lhidden() : Lscatter();
+        : s.layout === 'rows' ? Lrows(s) : s.layout === 'grid' ? Lgrid(s) : s.layout === 'hidden' ? Lhidden() : Lscatter();
       return (cache[i] = L);
     }
 
@@ -495,8 +546,12 @@
       var zones = [clearZones(from), from !== to ? clearZones(to) : null].filter(Boolean);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
+      // fade the stage out once the last scene's hold is over (footer, trailing content)
+      var last = anchors[anchors.length - 1], exit = scenes.length > 1 ? clamp((y - (last.top + last.len - H * .15)) / (H * .25)) : 0;
+      var fadeAll = 1 - exit;
+      if (fadeAll <= .01) { scrub(); return; }
       var same = from === to;
-      if (LA.under) LA.under(same ? 1 : 1 - t); if (!same && LB.under) LB.under(t);
+      if (LA.under) LA.under((same ? 1 : 1 - t) * fadeAll); if (!same && LB.under) LB.under(t * fadeAll);
       for (var k = 0; k < P.length; k++) {
         var p = P[k], a = LA[k], b = LB[k];
         var q = from === to ? 1 : ease(clamp((t - p.d * .35) / .65));
@@ -507,14 +562,14 @@
           if (e < 1) al *= .1 + .9 * e * e;
         }
         var th = lerp(a.t, b.t, q), len = lerp(a.l, b.l, q);
-        ctx.globalAlpha = al; ctx.fillStyle = p.color;
+        ctx.globalAlpha = al * fadeAll; ctx.fillStyle = p.color;
         ctx.save(); ctx.translate(x, yy); ctx.rotate(lerp(a.a, b.a, q));
         ctx.fillRect(-len / 2, -th / 2, len, th);
         ctx.restore();
       }
       ctx.globalAlpha = 1;
-      if (LA.overlay) LA.overlay(same ? 1 : 1 - ease(clamp(t * 2.5)));
-      if (!same && LB.overlay) LB.overlay(ease(clamp((t - .6) / .4)));
+      if (LA.overlay) LA.overlay((same ? 1 : 1 - ease(clamp(t * 2.5))) * fadeAll);
+      if (!same && LB.overlay) LB.overlay(ease(clamp((t - .6) / .4)) * fadeAll);
       scrub();
     }
 

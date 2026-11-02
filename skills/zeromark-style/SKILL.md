@@ -70,7 +70,11 @@ holding the working dashboard (see `examples/story-overview.html`).
 2. **Plan 3–6 scenes**, one claim each, and pick each scene's layout to *show* that claim:
    `scatter` (the unsorted pile) → `columns` (sorted by group, labelled with counts) → `map` (relationships, with `edges`)
    → `stack` with `from`/`to` (a queue draining) → `hidden` (get out of the way of real content) → `stack`/`hidden` (the end state).
-   `rows` = one horizontal band per group; `bars` = a compact grouped bar chart.
+   `rows` = one horizontal band per group; `bars` = a compact grouped bar chart; `grid` = the real schedule or matrix
+   (rows = groups, columns = days or slots, `cells` says where each group's items go, `per` = items per cell). `grid`
+   is the strongest payoff scene when the data has an entity × time shape (rosters, uptime, bookings, sprints).
+   Phones: formations move to the lower ~40% of the screen automatically (`regionMobile` overrides that), and the
+   stage fades out after the last scene, so the footer stays clean.
 3. **Markup.** `section.zm-scene` (one screen) or `section.zm-scene.zm-scene--pin` (holds while particles morph; add
    `zm-scene--top` to put the copy at the top so formations sit below it) > `.zm-scene-pin` > `.zm-scene-copy` with
    `zm-kicker`, optional `zm-figure` using `data-zm-scrub="1184 0"`, a `zm-section-title`, and a `zm-lede`.

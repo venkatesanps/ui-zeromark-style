@@ -126,7 +126,7 @@ scrolling up rewinds.
 `ZeromarkFX.stage()` reproduces this with your data. Rules:
 - **Particles are data.** One per item (scaled by `max`), grouped by a real dimension. Never decorative noise.
 - **One claim per scene**, and the layout *is* the evidence: columns for "where it comes from", map for "how it spreads",
-  stack plus `from`/`to` for "how much is left", rows for "who / when".
+  stack plus `from`/`to` for "how much is left", rows for "who", grid for "who, when" (the actual schedule or matrix).
 - **Pinned scenes** (`zm-scene--pin`) give the morph room: about 2.3 screens each. Use `zm-scene--top` when the formation
   needs the lower half of the screen.
 - **Counters move with the scroll** (`data-zm-scrub="from to"`), not with a timer. The copy states what the counter means.
