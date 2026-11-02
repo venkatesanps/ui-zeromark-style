@@ -28,6 +28,10 @@ woff2 files and add `@font-face` rules.
    `ZeromarkFX.field(document.querySelector('.zm-field'), { stacks or columns or cells, colLabels, legend, clear: headlineEl })`
    and `ZeromarkFX.init()`. In React/Vue/Svelte, call these in a mount effect (`useEffect`, `onMounted`, `onMount`) on
    the canvas ref, and call `ZeromarkFX.reveal(containerEl)` again after data loads, so new rows animate in.
+7. Story mode: no canvas needed (`stage()` creates a fixed one). Mark sections up as `.zm-scene` / `.zm-scene--pin` and call
+   `ZeromarkFX.stage({ groups, scenes })` after the data is available. In SPAs, call it once per page mount, call
+   `.refresh()` on the returned handle after layout changes (data loaded, fonts loaded), and remove the
+   `canvas.zm-stage` element on unmount.
 
 KPI markup:
 ```html

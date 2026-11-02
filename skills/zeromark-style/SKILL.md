@@ -1,6 +1,6 @@
 ---
 name: zeromark-style
-description: Restyle an existing dashboard, admin panel, report or web app, or build a new one, in the "zeromark" visual style. That style is warm cream paper, near-black ink, one vermilion accent, Space Grotesk with IBM Plex Mono for numbers and labels, hairline cards and keycap chips. Works with any stack (plain HTML/CSS, Tailwind, React, Vue, Angular, Svelte, Bootstrap, MUI, Ant Design, Chakra, shadcn, Streamlit, Dash, Grafana) and any chart library (Chart.js, ECharts, Plotly, Highcharts, Apex, Recharts, D3, Vega, matplotlib). It changes styling only and preserves behaviour. Use when the user says "zeromark style", "make this dashboard look like zeromark", or "apply our house style".
+description: Restyle an existing dashboard, admin panel, report or web app, or build a new one, in the "zeromark" visual style. That style is warm cream paper, near-black ink, one vermilion accent, Space Grotesk with IBM Plex Mono for numbers and labels, hairline cards and keycap chips. Works with any stack (plain HTML/CSS, Tailwind, React, Vue, Angular, Svelte, Bootstrap, MUI, Ant Design, Chakra, shadcn, Streamlit, Dash, Grafana) and any chart library (Chart.js, ECharts, Plotly, Highcharts, Apex, Recharts, D3, Vega, matplotlib). It changes styling only and preserves behaviour. Includes story mode, the zeromark.io scroll transformation where the same data particles morph between layouts as you scroll. Use when the user says "zeromark style", "make this dashboard look like zeromark", or "apply our house style".
 ---
 
 # zeromark style
@@ -13,7 +13,7 @@ need ships next to this file:
 | `assets/zeromark.css` | Tokens (CSS variables, light + dark), components (`zm-*`), and **adopt mode** (`.zm-adopt` restyles bare HTML) |
 | `assets/tokens.json` | The same tokens as data, for theme objects in JS, Python, and so on |
 | `assets/zeromark-charts.js` | Chart themes: Chart.js, ECharts, Plotly, Highcharts, ApexCharts, Vega, plus raw tokens |
-| `assets/zeromark-fx.js` | **The signature layer**: a confetti field that settles into the page's own data, count-ups, reveals, row-form, strips, chains |
+| `assets/zeromark-fx.js` | **The signature layer**: `stage()` story mode (one fixed stage that morphs as you scroll), `field()` compact masthead, count-ups, scroll-scrubbed counters, reveals, strips, chains |
 | `assets/tailwind.preset.js` | Tailwind v3 preset; the v4 `@theme` snippet is in its header comment |
 | `reference/style-guide.md` | **Read first.** The rules: palette roles, type, density, components, do and don't |
 | `reference/stack-recipes.md` | Exactly where the tokens go for each framework, component library and chart library |
@@ -51,8 +51,37 @@ Follow `reference/stack-recipes.md` for this stack. Order of preference:
 
 Then theme the charts with `zeromark-charts.js` (or the equivalent values in Python/R; see the recipes).
 
-### 4. Choose the level: expressive (default) or quiet
-A palette swap alone looks like "a beige theme", not zeromark. **Default to expressive** and apply the
+### 4. Choose the mode: story, expressive (default) or quiet
+
+| Mode | Use for | What it adds |
+|---|---|---|
+| **Story** | Overview, weekly or monthly review, report, executive summary, landing or "state of X" pages: anything people *scroll through and read* | **The zeromark.io transformation**: `ZeromarkFX.stage()` puts one fixed canvas behind the page; the same particles (one per data item) morph between layouts as you scroll (scatter → columns → map → stack → hidden), the copy stays put in pinned scenes, and counters are scrubbed by scroll. Scrolling up rewinds. |
+| **Expressive** (default) | Operational dashboards people open, scan and act on | A compact masthead whose confetti settles into one chart (`ZeromarkFX.field()`), statement headline, numbered sections, count-ups, strips and chains |
+| **Quiet** | Dense all-day tools (log viewers, blotters, admin CRUD), or on request | Palette, type and components only |
+
+If the user says "like zeromark.io", "the transformation", "scroll story" or "story mode", use **story**. If a dashboard
+has both a summary and a working area, use story for the top of the page and finish with a `zm-scene--flow` section
+holding the working dashboard (see `examples/story-overview.html`).
+
+#### Story mode recipe
+1. **Choose the particles.** One particle = one countable thing the page is about (alerts, orders, tickets, bookmarks,
+   incidents). Group them by a dimension the page already has (service, region, team, status). `max` caps the
+   particles; real counts stay in the labels and counters.
+2. **Plan 3–6 scenes**, one claim each, and pick each scene's layout to *show* that claim:
+   `scatter` (the unsorted pile) → `columns` (sorted by group, labelled with counts) → `map` (relationships, with `edges`)
+   → `stack` with `from`/`to` (a queue draining) → `hidden` (get out of the way of real content) → `stack`/`hidden` (the end state).
+   `rows` = one horizontal band per group; `bars` = a compact grouped bar chart.
+3. **Markup.** `section.zm-scene` (one screen) or `section.zm-scene.zm-scene--pin` (holds while particles morph; add
+   `zm-scene--top` to put the copy at the top so formations sit below it) > `.zm-scene-pin` > `.zm-scene-copy` with
+   `zm-kicker`, optional `zm-figure` using `data-zm-scrub="1184 0"`, a `zm-section-title`, and a `zm-lede`.
+   Ordinary dashboard content goes in `section.zm-scene.zm-scene--flow` with layout `hidden`.
+4. **Wire it.** `ZeromarkFX.stage({ groups: [{ key, label, count }], scenes: [{ el, layout, ...options }] })`, then
+   `ZeromarkFX.init()`. Group colours follow the series order, so pass groups in the same order as the page's charts.
+5. **Verify by scrolling.** Capture 12–15 frames from top to bottom (see Verify) and check that each scene's formation
+   is fully visible, labels don't collide with the copy, and scrolling back up rewinds.
+
+### 4b. Expressive and quiet details
+A palette swap alone looks like "a beige theme", not zeromark. Unless story or quiet applies, **default to expressive** and apply the
 signature layer (section 8 of `reference/style-guide.md`) on top of the component mapping. Use **quiet**
 (component mapping only) only when the user asks, or for dense operator screens viewed all day
 (trading blotters, log viewers, admin CRUD).
@@ -94,6 +123,8 @@ Use the mapping table in `reference/style-guide.md`. Rules that matter most:
 ### 7. Verify
 Run `snap.js` again to `design-qa/after` (both themes if relevant). Then:
 - Compare before and after screenshots: every component should be restyled, nothing missing or broken.
+- **Story mode:** screenshot 12–15 scroll positions top to bottom at 1280×800 and 390×844, plus one after scrolling back
+  to the top. Make a contact sheet and read it. Every scene needs a clear formation, and the rewind frame must match the first.
 - Ask yourself: "would someone who's seen zeromark.io recognise this?" If the answer is "it's just beige", the
   signature layer is missing or too timid. Go back to step 4. (Use `--wait 3000` so the field has settled.)
 - `contrastFailures` must be empty, or each one explained (decorative text only).

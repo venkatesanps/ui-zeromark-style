@@ -398,6 +398,29 @@ button.zm-chip, a.zm-chip, label.zm-chip { cursor: pointer; text-decoration: non
   .zm-strip { --zm-strip-label: 86px; gap: 5px 3px; }
 }
 
+/* ---------- Story mode (ZeromarkFX.stage) ----------
+   <canvas class="zm-stage"> is fixed behind the page; sections are scenes.
+   .zm-scene         a full-viewport section (one layout)
+   .zm-scene--pin    taller section whose copy stays put while the particles morph
+   .zm-scene-copy    the text block; particles fade around it so it stays readable */
+.zm-stage { position: fixed; inset: 0; z-index: 0; pointer-events: none; display: block; }
+:where(.zm-story body > *:not(.zm-stage)) { position: relative; z-index: 1; }   /* zero specificity: sticky top bars keep winning */
+.zm-scene { position: relative; min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: var(--zm-12) var(--zm-5); overflow-x: clip; }
+.zm-scene--pin { display: block; min-height: 0; height: 230vh; padding: 0; place-items: normal; }
+.zm-scene--flow { display: block; place-items: normal; min-height: 0; padding: 96px 0 var(--zm-12); }   /* ordinary dashboard content inside a story */
+.zm-scene--pin > .zm-scene-pin { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; place-items: center; padding: 0 var(--zm-5); }
+.zm-scene--top > .zm-scene-pin, .zm-scene--top { place-items: start center; padding-top: 14vh; }
+.zm-scene-copy { position: relative; max-width: 720px; text-align: center; }
+.zm-scene-copy::before { content: ""; position: absolute; inset: -40px -60px; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, var(--zm-paper) 55%, transparent); }
+.zm-scene-copy .zm-statement em { display: block; }
+.zm-scene-copy .zm-lede { margin-left: auto; margin-right: auto; }
+.zm-scene .zm-figure + .zm-section-title, .zm-scene .zm-kicker + .zm-figure { margin-top: var(--zm-3); }
+.zm-scroll-cue { margin-top: var(--zm-8); font: 500 12px var(--zm-mono); letter-spacing: .2em; color: var(--zm-soft); }
+.zm-scroll-cue::after { content: ""; display: block; width: 14px; height: 14px; margin: 8px auto 0; border-right: 2px solid var(--zm-flame); border-bottom: 2px solid var(--zm-flame);
+  transform: rotate(45deg); animation: zm-beckon 2s ease-in-out infinite; }
+@keyframes zm-beckon { 0%, 100% { translate: 0 0; } 45% { translate: 0 8px; } }
+
 /* Keycap legend row (shortcuts, actions, filters) */
 .zm-keys { display: flex; flex-wrap: wrap; gap: 8px; }
 
@@ -416,7 +439,7 @@ button.zm-chip, a.zm-chip, label.zm-chip { cursor: pointer; text-decoration: non
 .zm-base :focus-visible, .zm-adopt :focus-visible, [class*="zm-"]:focus-visible { outline: 2px solid var(--zm-flame); outline-offset: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .zm-rise, .zm-pop, .zm-skeleton, .zm-node.live::after { animation: none !important; }
+  .zm-rise, .zm-pop, .zm-skeleton, .zm-node.live::after, .zm-scroll-cue::after { animation: none !important; }
   .zm-fx .zm-reveal, .zm-fx .zm-table--animate tbody tr, .zm-fx .zm-strip .zm-cell, .zm-fx .zm-chain .zm-node { opacity: 1 !important; transform: none !important; animation: none !important; }
   .zm-fx .zm-chain::before { transform: none !important; }
   [class*="zm-"], .zm-adopt * { transition-duration: .01ms !important; }

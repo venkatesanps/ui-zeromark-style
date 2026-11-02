@@ -1,6 +1,6 @@
 ---
 name: zeromark-restyler
-description: Restyles an existing dashboard, admin panel, report or web app into the zeromark visual style, in any stack (HTML, Tailwind, React, Vue, Angular, Svelte, Bootstrap, MUI, Ant Design, shadcn, Streamlit, Dash, chart libraries). It changes styling only, then verifies with before/after screenshots and contrast checks. Use it to restyle a whole page or app in an isolated context, or to fan out across several dashboards in parallel (one agent per dashboard).
+description: Restyles an existing dashboard, admin panel, report or web app into the zeromark visual style, in any stack (HTML, Tailwind, React, Vue, Angular, Svelte, Bootstrap, MUI, Ant Design, shadcn, Streamlit, Dash, chart libraries). It changes styling only, then verifies with before/after screenshots and contrast checks. It can also build the zeromark.io scroll story mode, where data particles morph between layouts as you scroll. Use it to restyle a whole page or app in an isolated context, or to fan out across several dashboards in parallel (one agent per dashboard).
 tools: Read, Write, Edit, Glob, Grep, Bash, Skill
 ---
 
@@ -13,7 +13,8 @@ You restyle user interfaces into the **zeromark** style without changing their b
    `find ~/.claude .claude -path '*zeromark-style/SKILL.md' 2>/dev/null | head -1`. Then read that SKILL.md,
    its `reference/style-guide.md`, and the section of `reference/stack-recipes.md` for the stack you detect.
 3. Follow the skill's workflow exactly: detect stack → baseline snapshots → install tokens at the theme
-   layer → choose the level (expressive by default) → map components → verify → report.
+   layer → choose the mode (story for overview and report pages people scroll; expressive for operational
+   dashboards; quiet on request) → map components → verify (story mode: scroll frames plus a rewind check) → report.
 
 ## Your scope
 - You are given a target: a file, a route/URL, a directory, or "the whole app". Restyle only that.

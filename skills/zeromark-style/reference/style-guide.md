@@ -115,3 +115,22 @@ Headings never go below 700 or above 700. Mono never goes bold beyond 500.
 
 Motion budget: everything finishes within ~2.5s of load or of scrolling into view. Nothing loops except a `live` halo.
 `prefers-reduced-motion` shows the settled state immediately; `zeromark-fx.js` handles this.
+
+## 9. Story mode (the zeromark.io transformation)
+
+What zeromark.io does: one canvas, fixed behind the whole page. The same particles stay on screen for the entire
+scroll and change formation per section: scattered → sorted into columns by category (with a counter falling to
+"0 unsorted") → a network map → one narrow stack (a queue) → … → "0 left". It is scrubbed by scroll position, so
+scrolling up rewinds.
+
+`ZeromarkFX.stage()` reproduces this with your data. Rules:
+- **Particles are data.** One per item (scaled by `max`), grouped by a real dimension. Never decorative noise.
+- **One claim per scene**, and the layout *is* the evidence: columns for "where it comes from", map for "how it spreads",
+  stack plus `from`/`to` for "how much is left", rows for "who / when".
+- **Pinned scenes** (`zm-scene--pin`) give the morph room: about 2.3 screens each. Use `zm-scene--top` when the formation
+  needs the lower half of the screen.
+- **Counters move with the scroll** (`data-zm-scrub="from to"`), not with a timer. The copy states what the counter means.
+- **Copy stays readable:** particles fade around `.zm-scene-copy` automatically, and the copy has a soft paper halo.
+- **Real content stays calm:** dashboard cards and tables live in `zm-scene--flow` sections with layout `hidden`.
+- **End on zero or on the answer:** the last scene resolves the story ("0 open", "inventory-sync is next week's fix").
+- Reduced motion: formations snap instead of morphing; counters still follow scroll.

@@ -4,7 +4,8 @@ A Claude Code plugin that restyles **any dashboard or web UI, in any stack**, in
 style: warm cream paper, near-black ink, one vermilion accent, Space Grotesk headings with IBM Plex Mono
 for numbers and labels, hairline cards and keycap chips. It keeps behaviour intact, adds the signature
 layer (a confetti field that settles into your dashboard's own data, statement headlines, mono figures and
-numbered sections), then proves it with before/after screenshots and automated contrast and overflow checks.
+numbered sections), and has a **story mode** that reproduces zeromark.io's scroll transformation with your
+data. It proves the result with before/after screenshots and automated contrast and overflow checks.
 Ask for the *quiet* level if you only want the palette and components.
 
 | Before | After (light) | After (dark) |
@@ -14,13 +15,23 @@ Ask for the *quiet* level if you only want the palette and components.
 Source: [`examples/dashboard-before.html`](examples/dashboard-before.html) → [`examples/dashboard-after.html`](examples/dashboard-after.html).
 Same IDs, same handlers, same data.
 
+### Story mode: the zeromark.io transformation
+One canvas fixed behind the page. The same particles (here, 1,184 alerts) scatter, sort into columns by service while
+the counter falls to 0, form a dependency map, collapse into a triage queue that drains to 37, step aside for the real
+dashboard, and finish at "0 open". It's scrubbed by scroll, so scrolling up rewinds.
+
+![story mode frames](docs/story.png)
+
+Source: [`examples/story-overview.html`](examples/story-overview.html). Use story mode for overview, review and report
+pages; expressive (the default) for operational dashboards; quiet for dense tools.
+
 ## What's inside
 
 | Path | What it does |
 |---|---|
 | `skills/zeromark-style/` | **The skill.** Workflow, style guide, per-stack recipes, assets and QA script |
 | `skills/zeromark-style/assets/zeromark.css` | Drop-in stylesheet: tokens (light/dark/auto), `zm-*` components, and **adopt mode** (`<body class="zm-adopt">` restyles bare HTML) |
-| `skills/zeromark-style/assets/zeromark-fx.js` | **Signature layer**: confetti field that settles into your own data, count-ups, reveals, status strips, timelines |
+| `skills/zeromark-style/assets/zeromark-fx.js` | **Signature layer**: `stage()` story mode (particles morph between layouts as you scroll), `field()` compact masthead, count-ups, scroll-scrubbed counters, reveals, status strips, timelines |
 | `skills/zeromark-style/assets/zeromark-charts.js` | Chart themes: Chart.js, ECharts, Plotly, Highcharts, ApexCharts, Vega; raw tokens for Recharts/D3/Nivo |
 | `skills/zeromark-style/assets/tailwind.preset.js` | Tailwind v3 preset (v4 `@theme` snippet in the header) |
 | `skills/zeromark-style/assets/tokens.json` | All tokens as data, for Python, R, BI tools, CSS-in-JS |
@@ -114,6 +125,7 @@ Ask in plain words:
 - "Restyle this React dashboard in zeromark style, light and dark"
 - "Use the zeromark-restyler agent on each dashboard under `dashboards/`, in parallel"
 - "Theme our Streamlit app and its Plotly charts in zeromark style"
+- "Turn our weekly ops report into a zeromark story-mode page"
 
 Or call it directly: `/zeromark-style:zeromark-style <target>`.
 

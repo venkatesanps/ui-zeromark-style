@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" data-zm-theme="auto">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Ops Review</title>
+<!-- Story mode example: one fixed stage behind the page. The same 1,184 alerts (scaled to particles)
+     scatter, sort into columns by service, form a dependency map, then collapse into a triage queue
+     that drains as you scroll. Scroll up and it rewinds. The data is illustrative. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../skills/zeromark-style/assets/zeromark.css">
+</head>
+<body class="zm-adopt">
+<header class="zm-topbar">
+  <a class="zm-brand" href="#"><span class="zm-brand-mark" aria-hidden="true">O</span>Ops</a>
+  <nav class="zm-nav"><a href="#" aria-current="page">Weekly review</a><a href="dashboard-after.html">Live dashboard</a><a href="#">Incidents</a></nav>
+</header>
+
+<main>
+  <!-- Scene 0: scatter -->
+  <section class="zm-scene" id="s-hero">
+    <div class="zm-scene-copy">
+      <div class="zm-kicker">Weekly ops review · week 44</div>
+      <h1 class="zm-statement" style="margin-top:14px"><span data-zm-count="1184">1,184</span> alerts fired this week. <em>Here's where they went.</em></h1>
+      <p class="zm-lede">Every bar behind this text is one alert (scaled). Scroll to sort them.</p>
+      <div class="zm-scroll-cue" aria-hidden="true">SCROLL</div>
+    </div>
+  </section>
+
+  <!-- Scene 1: columns by service -->
+  <section class="zm-scene zm-scene--pin zm-scene--top" id="s-sorted">
+    <div class="zm-scene-pin"><div class="zm-scene-copy">
+      <div class="zm-kicker">01 · Sorted</div>
+      <div class="zm-figure"><span data-zm-scrub="1184 0">1,184</span><small>unsorted</small></div>
+      <h2 class="zm-section-title">Every alert finds its service.</h2>
+      <p class="zm-lede">inventory-sync alone raised 512, as many as the next two services combined.</p>
+    </div></div>
+  </section>
+
+  <!-- Scene 2: dependency map -->
+  <section class="zm-scene zm-scene--pin zm-scene--top" id="s-mapped">
+    <div class="zm-scene-pin"><div class="zm-scene-copy">
+      <div class="zm-kicker">02 · Mapped</div>
+      <h2 class="zm-section-title">Then the blast radius <em>shows up.</em></h2>
+      <p class="zm-lede">Checkout and search both read from inventory-sync, so its bad week became theirs.</p>
+    </div></div>
+  </section>
+
+  <!-- Scene 3: triage queue that drains -->
+  <section class="zm-scene zm-scene--pin zm-scene--top" id="s-triage">
+    <div class="zm-scene-pin"><div class="zm-scene-copy">
+      <div class="zm-kicker">03 · Triaged</div>
+      <div class="zm-figure"><span data-zm-scrub="1184 37">1,184</span><small>need a human</small></div>
+      <h2 class="zm-section-title">Most of it was noise. <em>37 weren't.</em></h2>
+      <p class="zm-lede">Deduplication, flapping checks and auto-resolved alerts drained the queue to 37 pages.</p>
+    </div></div>
+  </section>
+
+  <!-- Scene 4: the actual dashboard content (stage hidden so cards stay clean) -->
+  <section class="zm-scene zm-scene--flow" id="s-content">
+    <div class="zm-page" style="padding-top:0">
+      <div class="zm-kicker zm-reveal">04 · The week in numbers</div>
+      <h2 class="zm-section-title zm-reveal">Four numbers worth <em>remembering.</em></h2>
+      <section class="zm-grid zm-reveal-group" style="--zm-min:200px;margin-top:20px">
+        <div class="zm-kpi"><div class="zm-kpi-label">Alerts fired</div><div class="zm-kpi-value"><span data-zm-count="1184">1,184</span></div><div class="zm-kpi-foot"><span class="zm-delta down">+22%</span> vs week 43</div></div>
+        <div class="zm-kpi"><div class="zm-kpi-label">Paged a human</div><div class="zm-kpi-value"><span data-zm-count="37">37</span></div><div class="zm-kpi-foot"><span class="zm-delta up">−9</span> vs week 43</div></div>
+        <div class="zm-kpi"><div class="zm-kpi-label">Median ack</div><div class="zm-kpi-value"><span data-zm-count="3.4" data-zm-decimals="1">3.4</span><small>min</small></div><div class="zm-kpi-foot"><span class="zm-delta flat">±0</span> target 5 min</div></div>
+        <div class="zm-kpi"><div class="zm-kpi-label">Noise ratio</div><div class="zm-kpi-value"><span data-zm-count="96.9" data-zm-decimals="1">96.9</span><small>%</small></div><div class="zm-kpi-foot"><span class="zm-pill zm-pill--warn">tune checks</span></div></div>
+      </section>
+      <div class="zm-card zm-card--flush zm-reveal" style="margin-top:16px">
+        <div class="zm-card-head"><h3 class="zm-card-title">Alerts by service</h3><span class="zm-label">week 44</span></div>
+        <div class="zm-table-wrap">
+        <table class="zm-table zm-table--animate">
+          <thead><tr><th>Service</th><th>Owner</th><th class="num">Alerts</th><th class="num">Paged</th><th class="num">Noise</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>inventory-sync</td><td>Supply</td><td class="num">512</td><td class="num">19</td><td class="num">96.3%</td><td><span class="zm-pill zm-pill--bad">Fix cache key</span></td></tr>
+            <tr><td>search</td><td>Discovery</td><td class="num">301</td><td class="num">8</td><td class="num">97.3%</td><td><span class="zm-pill zm-pill--warn">Raise p95 threshold</span></td></tr>
+            <tr><td>checkout-api</td><td>Payments</td><td class="num">188</td><td class="num">6</td><td class="num">96.8%</td><td><span class="zm-pill zm-pill--info">Watch</span></td></tr>
+            <tr><td>notifications</td><td>Growth</td><td class="num">121</td><td class="num">3</td><td class="num">97.5%</td><td><span class="zm-pill zm-pill--ok">OK</span></td></tr>
+            <tr><td>auth</td><td>Platform</td><td class="num">62</td><td class="num">1</td><td class="num">98.4%</td><td><span class="zm-pill zm-pill--ok">OK</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scene 5: the last ones drain to zero -->
+  <section class="zm-scene zm-scene--pin" id="s-end">
+    <div class="zm-scene-pin"><div class="zm-scene-copy">
+      <div class="zm-figure"><span data-zm-scrub="37 0">37</span><small>open</small></div>
+      <h2 class="zm-statement" style="font-size:clamp(30px,4vw,48px)">Every page answered. <em>Inventory-sync is next week's fix.</em></h2>
+      <a class="zm-btn zm-btn--primary" href="dashboard-after.html" style="margin-top:26px">Open the live dashboard →</a>
+    </div></div>
+  </section>
+</main>
+
+<footer style="max-width:1280px;margin:0 auto;padding:24px;border-top:1px dashed var(--zm-border)" class="zm-muted">
+  Ops · weekly review generated from the alerting pipeline · data is illustrative
+</footer>
+
+<script src="../skills/zeromark-style/assets/zeromark-fx.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  ZeromarkFX.stage({
+    groups: [
+      { key: 'inventory-sync', label: 'inventory', count: 512 },
+      { key: 'search', label: 'search', count: 301 },
+      { key: 'checkout-api', label: 'checkout', count: 188 },
+      { key: 'notifications', label: 'notify', count: 121 },
+      { key: 'auth', label: 'auth', count: 62 },
+    ],
+    scenes: [
+      { el: $('s-hero'), layout: 'scatter' },
+      { el: $('s-sorted'), layout: 'columns', labels: true, region: { x: .05, y: .42, w: .9, h: .46 } },
+      { el: $('s-mapped'), layout: 'map', edges: [['checkout-api', 'inventory-sync'], ['search', 'inventory-sync'], ['checkout-api', 'auth'], ['notifications', 'auth'], ['checkout-api', 'notifications']] },
+      { el: $('s-triage'), layout: 'stack', from: 1, to: 37 / 1184, height: .5 },
+      { el: $('s-content'), layout: 'hidden' },
+      { el: $('s-end'), layout: 'stack', from: 37 / 1184, to: 0, height: .2, bottom: .95 },
+    ],
+  });
+  ZeromarkFX.init();
+</script>
+</body>
+</html>
